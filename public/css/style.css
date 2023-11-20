@@ -1,0 +1,21 @@
+.w-50{
+    width: 50%;
+}
+
+.text-align-center{
+    text-align: center;
+}
+
+.mt-2{
+    margin-top: 2rem;
+}
+
+.text-decoration-none{
+    text-decoration: none;
+}
+
+
+input#imageInput  {
+    width: auto;
+    height: 70px; 
+}
