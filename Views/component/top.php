@@ -13,7 +13,6 @@
     </div>
 </main>
 <script>
-
     document.getElementById('myForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -32,7 +31,11 @@
                 return response.json();
             })
             .then(data => {
-                console.log('Success:', data);
+                if (data.success) {
+                    window.location.href = data.url;
+                } else {
+                    alert(data.message);
+                }
             })
             .catch(error => {
                 console.error('Error:', error);

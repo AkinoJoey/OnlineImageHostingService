@@ -6,16 +6,29 @@ use Database\MySQLWrapper;
 use Exception;
 
 class DatabaseHelper{
-    public static function insertImageData(string $path): bool{
+    public static function insertImageData(string $path, string $shared_url, string $delete_url): bool{
         $mysqli = new MySQLWrapper();
-        $query = "INSERT INTO images (path, shared_url, delete_url, view_count) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO images (path, shared_url, delete_url) VALUES (?, ?, ?)";
         $stmt = $mysqli->prepare($query);
-        $stmt->bind_param("ss", $path, );
+        $stmt->bind_param("sss",$path, $shared_url, $delete_url);
         $result = $stmt->execute();
 
         if (!$result) throw new Exception("Error executing INSERT query: " . $stmt->error);
 
         return true;
+    }
+
+    public static function getImageData(string $shared_url): Array | false{
+        $db = new MySQLWrapper();
+        $stmt = $db->prepare("SELECT path, view_count FROM images WHERE shared_url = ?");
+        $stmt->bind_param('s', $shared_url);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+
+        if (!$data) return false;
+
+        return $data;
     }
 
 }

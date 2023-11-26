@@ -7,6 +7,10 @@ $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path = explode('/', $url)[1];
 $method = $_SERVER['REQUEST_METHOD'];
 
+if($path == 'png' || $path == 'jpeg' || $path == 'gif'){
+    $path = 'getImage';
+}
+
 if (isset($routes[$path][$method])) {
     $renderer = $routes[$path][$method]();
     
