@@ -9,10 +9,12 @@
             </div>
             <button id="submitter" type="submit" role="button" class="w-50 mt-2">POST</button>
         </form>
-
     </div>
+    <div id="modal-container"></div>
 </main>
 <script>
+    const modal = document.getElementById('modal');
+
     document.getElementById('myForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -32,7 +34,19 @@
             })
             .then(data => {
                 if (data.success) {
-                    window.location.href = data.url;
+                    const shared_url = data.shared_url;
+                    const delete_url = data.delete_url;
+
+                    const container = document.getElementById('modal-container');
+                    container.innerHTML = `
+                    <dialog id="modal" open>
+                        <article class="modal mt-2">
+                            <h3>Confirm</h3>
+                            <p>共有用URL:<br><a href="${shared_url}" target="_blank" rel="noopener">${shared_url}</a></p>
+                            <p>削除用URL:<br><a href="${delete_url}" target="_blank" rel="noopener">${delete_url}</a></p>
+                        </article>
+                    </dialog>
+                    `;
                 } else {
                     alert(data.message);
                 }
