@@ -12,13 +12,13 @@ return [
         'POST' => function() : JSONRenderer {
             $imageInput = $_FILES['imageInput'];
             $finfo = new finfo(FILEINFO_MIME_TYPE);
-            $mime_type = $finfo->file($imageInput['tmp_name']);
-            $extension = explode('/', $mime_type)[1];
+            $mime = $finfo->file($imageInput['tmp_name']);
+            $extension = explode('/', $mime)[1];
 
-            $hashedName = hash('sha256', uniqid(mt_rand(), true)) . '.' . $extension;
-            $uploadDir =   __DIR__  .   '/../uploads/'; 
-            $subdirectory = substr($hashedName, 0, 2);
-            $imagePath = $uploadDir .  $subdirectory. '/' . $hashedName;
+            $filename = hash('sha256', uniqid(mt_rand(), true)) . '.' . $extension;
+            $uploadDir =   '../uploads/'; 
+            $subdirectory = substr($filename, 0, 2);
+            $imagePath = $uploadDir .  $subdirectory. '/' . $filename;
 
             // アップロード先のディレクトリがない場合は作成
             if(!is_dir(dirname($imagePath))) mkdir(dirname($imagePath), 0755, true);
@@ -27,7 +27,7 @@ return [
 
             $shared_url = hash('sha256', uniqid(mt_rand(), true));
             $delete_url = hash('sha256', uniqid(mt_rand(), true));
-            $insertResult = DatabaseHelper::insertImageData($imagePath, $shared_url, $delete_url);
+            $insertResult = DatabaseHelper::insertImageData($imagePath, $shared_url, $delete_url, $mime);
 
             if ($insertResult) {
                 return new JSONRenderer(["success" => true, "url" => "{$extension}/{$shared_url}"]);
@@ -47,7 +47,6 @@ return [
                 return new HTMLRenderer('component/404', ['errormsg' => 'Page not found']);
             }
             // TO:DO バリデーション
-            $extension = $paths[1];
             $shared_url = $paths[2];
 
             $data = DatabaseHelper::getImageData($shared_url);
@@ -58,12 +57,11 @@ return [
             }
             $path = $data['path'];
             $viewCount = $data['view_count'];
+            $mime = $data['mime'];
 
-            $image = file_get_contents($path);
-            header("Content-type: image/{$extension}");
-            echo readfile($path);
+            $image = base64_encode(file_get_contents($path));
 
-            return new HTMLRenderer('component/sharedImage', ['image'=> $image, 'viewCount' => $viewCount]);
+            return new HTMLRenderer('component/sharedImage', ['image'=> $image, 'mime' => $mime ,'viewCount' => $viewCount]);
         }
     ]
 ];
