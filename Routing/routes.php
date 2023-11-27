@@ -30,7 +30,7 @@ return [
             $insertResult = DatabaseHelper::insertImageData($imagePath, $shared_url, $delete_url, $mime);
 
             if ($insertResult) {
-                return new JSONRenderer(["success" => true, "url" => "{$extension}/{$shared_url}"]);
+                return new JSONRenderer(["success" => true, "shared_url" => "{$extension}/{$shared_url}", "delete_url"=> "delete/{$delete_url}"]);
             } else {
                 return new JSONRenderer(["success" => false, "message" => "Database operation failed"]);
             }
