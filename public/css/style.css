@@ -6,6 +6,10 @@
     text-align: center;
 }
 
+.mt-0{
+    margin-top: 0;
+}
+
 .mt-2{
     margin-top: 2rem;
 }
@@ -18,4 +22,10 @@
 input#imageInput  {
     width: auto;
     height: 70px; 
+}
+
+
+.modal{
+    text-align: center;
+    margin: 0 auto;
 }
