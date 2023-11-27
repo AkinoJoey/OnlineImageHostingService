@@ -3,7 +3,7 @@
     <div>
         <p class="text-align-center"><?= $viewCount ?></p>
         <div>
-            <img src="<?= $path ?>" alt="upload image">
+            <img src="data:<?= $mime ?>;base64,<?= $image ?>" alt="uploaded image">
         </div>
     </div>
 </main>
