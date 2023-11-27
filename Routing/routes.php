@@ -63,5 +63,21 @@ return [
 
             return new HTMLRenderer('component/sharedImage', ['image'=> $image, 'mime' => $mime ,'viewCount' => $viewCount]);
         }
+    ],
+    'delete' => [
+        'GET' => function() : HTMLRenderer {
+            $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            $paths = explode('/', $url);
+
+            // hash部分がない場合は404を出す
+            if (count($paths) < 3) {
+                http_response_code(404);
+                return new HTMLRenderer('component/404', ['errormsg' => 'Page not found']);
+            }
+            // TO:DO バリデーション
+            $delete_url = $paths[2];
+
+            return new HTMLRenderer('component/deleteImage');
+        }
     ]
 ];
