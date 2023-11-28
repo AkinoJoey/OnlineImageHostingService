@@ -1,6 +1,7 @@
 <?php
 
 use Helpers\DatabaseHelper;
+use Helpers\ValidationHelper;
 use Response\Render\HTMLRenderer;
 use Response\Render\JSONRenderer;
 
@@ -13,6 +14,9 @@ return [
             $imageInput = $_FILES['imageInput'];
             $finfo = new finfo(FILEINFO_MIME_TYPE);
             $mime = $finfo->file($imageInput['tmp_name']);
+
+            if(!ValidationHelper::validateFileType($mime)) return new JSONRenderer(['success' => false, 'message' => 'png,jpg,gif以外の拡張子には対応していません。']);
+
             $extension = explode('/', $mime)[1];
 
             $filename = hash('sha256', uniqid(mt_rand(), true)) . '.' . $extension;
@@ -23,7 +27,7 @@ return [
             // アップロード先のディレクトリがない場合は作成
             if(!is_dir(dirname($imagePath))) mkdir(dirname($imagePath), 0755, true);
             // アップロードにした場合は失敗のメッセージを送る
-            if (!move_uploaded_file($imageInput['tmp_name'], $imagePath)) return array('success' => false, 'message' => 'Upload failed.');
+            if (!move_uploaded_file($imageInput['tmp_name'], $imagePath)) return new JSONRenderer(['success' => false, 'message' => 'Upload failed.']);
 
             $hash_for_shared_url = hash('sha256', uniqid(mt_rand(), true));
             $hash_for_delete_url = hash('sha256', uniqid(mt_rand(), true));
