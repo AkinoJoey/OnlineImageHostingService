@@ -25,12 +25,14 @@ return [
             // アップロードにした場合は失敗のメッセージを送る
             if (!move_uploaded_file($imageInput['tmp_name'], $imagePath)) return array('success' => false, 'message' => 'Upload failed.');
 
-            $shared_url = hash('sha256', uniqid(mt_rand(), true));
-            $delete_url = hash('sha256', uniqid(mt_rand(), true));
+            $hash_for_shared_url = hash('sha256', uniqid(mt_rand(), true));
+            $hash_for_delete_url = hash('sha256', uniqid(mt_rand(), true));
+            $shared_url = '/' . $extension . '/' . $hash_for_shared_url;
+            $delete_url = '/' .  'delete' . '/' . $hash_for_delete_url;
             $insertResult = DatabaseHelper::insertImageData($imagePath, $shared_url, $delete_url, $mime);
 
             if ($insertResult) {
-                return new JSONRenderer(["success" => true, "shared_url" => "{$extension}/{$shared_url}", "delete_url"=> "delete/{$delete_url}"]);
+                return new JSONRenderer(["success" => true, "shared_url" => $shared_url, "delete_url"=> $delete_url]);
             } else {
                 return new JSONRenderer(["success" => false, "message" => "Database operation failed"]);
             }
@@ -38,17 +40,7 @@ return [
     ],
     'getImage' => [
         'GET' => function(): HTMLRenderer{
-            $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-            $paths = explode('/', $url);
-
-            // hash部分がない場合は404を出す
-            if (count($paths) < 3) {
-                http_response_code(404);
-                return new HTMLRenderer('component/404', ['errormsg' => 'Page not found']);
-            }
-            // TO:DO バリデーション
-            $shared_url = $paths[2];
-
+            $shared_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             $data = DatabaseHelper::getImageData($shared_url);
 
             if (!$data) {
@@ -66,18 +58,29 @@ return [
     ],
     'delete' => [
         'GET' => function() : HTMLRenderer {
-            $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-            $paths = explode('/', $url);
+            $delete_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            $shared_url = DatabaseHelper::getSharedUrl($delete_url);
 
-            // hash部分がない場合は404を出す
-            if (count($paths) < 3) {
+            if (!$shared_url) {
                 http_response_code(404);
-                return new HTMLRenderer('component/404', ['errormsg' => 'Page not found']);
+                return new HTMLRenderer('component/404', ['errormsg' => "Page not found"]);
             }
-            // TO:DO バリデーション
-            $delete_url = $paths[2];
 
-            return new HTMLRenderer('component/deleteImage');
+            return new HTMLRenderer('component/deleteImage', ['shared_url' => $shared_url]);
+        },
+        'POST' => function () : JSONRenderer {
+            $json = file_get_contents("php://input");
+            $shared_url = json_decode($json, true)['shared_url'];
+            $result = DatabaseHelper::deleteImageData($shared_url);
+
+            if ($result) {
+                return new JSONRenderer(["success" => true]);
+            } else {
+                return new JSONRenderer(["success" => false, "message" => "Database operation failed"]);
+            }
+
+            return new JSONRenderer(["success" => true, "test" => $shared_url]);
         }
+        
     ]
 ];
