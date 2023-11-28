@@ -54,4 +54,14 @@ class DatabaseHelper{
         return $rowsAffected > 0;
     }
 
+    public static function updateViewCount(string $shared_url) : bool {
+        $mysqli = new MySQLWrapper();
+        $stmt = $mysqli->prepare("UPDATE images SET view_count = view_count + 1 WHERE shared_url = ? ");
+        $stmt->bind_param('s', $shared_url);
+        $stmt->execute();
+        $rowsAffected = $stmt->affected_rows;
+
+        return $rowsAffected > 0;
+    }
+
 }
