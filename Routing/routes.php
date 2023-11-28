@@ -47,6 +47,9 @@ return [
                 http_response_code(404);
                 return new HTMLRenderer('component/404', ['errormsg' => "Page not found"]);
             }
+
+            DatabaseHelper::updateViewCount($shared_url);
+
             $path = $data['path'];
             $viewCount = $data['view_count'];
             $mime = $data['mime'];
