@@ -8,7 +8,7 @@
     </div>
     <!-- Confirm modal -->
     <dialog id="confirm-modal">
-        <article class="modal">
+        <article class="modal wobble-hor-bottom">
             <h3>Confirm</h3>
             <p>本当に画像を削除してもよろしいですか？</p>
             <p>Yesを押すと画像が削除されます。</p>
@@ -25,7 +25,7 @@
             <h3>Deletion Completed</h3>
             <p>削除が完了しました。</p>
             <footer class="mt-0">
-                <a href="/" id="home" role="button">Confirm</a>
+                <a href="/" id="home" role="button">Confirmed</a>
             </footer>
         </article>
     </dialog>

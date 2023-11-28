@@ -39,7 +39,7 @@
 
                     const container = document.getElementById('modal-container');
                     container.innerHTML = `
-                    <dialog id="modal" open>
+                    <dialog id="modal" class="scale-in-ver-center" open>
                         <article class="modal">
                             <h3>Confirm</h3>
                             <p>共有用URL:<br><a href="${shared_url}" target="_blank" rel="noopener">${shared_url}</a></p>
