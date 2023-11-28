@@ -40,7 +40,7 @@
                     const container = document.getElementById('modal-container');
                     container.innerHTML = `
                     <dialog id="modal" open>
-                        <article class="modal mt-2">
+                        <article class="modal">
                             <h3>Confirm</h3>
                             <p>共有用URL:<br><a href="${shared_url}" target="_blank" rel="noopener">${shared_url}</a></p>
                             <p>削除用URL:<br><a href="${delete_url}" target="_blank" rel="noopener">${delete_url}</a></p>
