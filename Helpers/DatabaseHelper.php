@@ -19,8 +19,8 @@ class DatabaseHelper{
     }
 
     public static function getImageData(string $shared_url): Array | false{
-        $db = new MySQLWrapper();
-        $stmt = $db->prepare("SELECT path, mime ,view_count FROM images WHERE shared_url = ?");
+        $mysqli = new MySQLWrapper();
+        $stmt = $mysqli->prepare("SELECT path, mime ,view_count FROM images WHERE shared_url = ?");
         $stmt->bind_param('s', $shared_url);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -29,6 +29,29 @@ class DatabaseHelper{
         if (!$data) return false;
 
         return $data;
+    }
+
+    public static function getSharedUrl(string $delete_url) : string | false {
+        $mysqli = new MySQLWrapper();
+        $stmt = $mysqli->prepare("SELECT shared_url FROM images WHERE delete_URL = ?");
+        $stmt->bind_param('s', $delete_url);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+
+        if (!$data) return false;
+
+        return $data['shared_url'];
+    }
+
+    public static function deleteImageData(string $shared_url) : bool {
+        $mysqli = new MySQLWrapper();
+        $stmt = $mysqli->prepare("DELETE FROM images WHERE shared_url = ?");
+        $stmt-> bind_param('s', $shared_url);
+        $stmt->execute();
+        $rowsAffected = $stmt->affected_rows;
+
+        return $rowsAffected > 0;
     }
 
 }
