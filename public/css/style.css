@@ -177,3 +177,8 @@ input#imageInput {
         transform: translateX(-6px) rotate(-1.2deg);
     }
 }
+
+.dynamic-image {
+    max-width: 100%;
+    height: auto;
+}
