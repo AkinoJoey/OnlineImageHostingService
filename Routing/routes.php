@@ -39,7 +39,7 @@ return [
             if ($insertResult) {
                 return new JSONRenderer(["success" => true, "shared_url" => $shared_url, "delete_url"=> $delete_url]);
             } else {
-                return new JSONRenderer(["success" => false, "message" => "Database operation failed"]);
+                return new JSONRenderer(["success" => false, "message" => "データベースの操作に失敗しました。"]);
             }
         }
     ],
@@ -53,7 +53,7 @@ return [
                 return new HTMLRenderer('component/404', ['errormsg' => "Page not found"]);
             }
 
-            DatabaseHelper::updateViewCount($shared_url);
+            if(!DatabaseHelper::updateImageData($shared_url)) return new JSONRenderer(['success' => false, 'message' => 'データベースの操作に失敗しました。']);
 
             $path = $data['path'];
             $viewCount = $data['view_count'];
