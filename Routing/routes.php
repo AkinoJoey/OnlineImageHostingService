@@ -16,6 +16,7 @@ return [
             $mime = $finfo->file($imageInput['tmp_name']);
 
             if(!ValidationHelper::validateFileType($mime)) return new JSONRenderer(['success' => false, 'message' => 'png,jpg,gif以外の拡張子には対応していません。']);
+            if(!ValidationHelper::isFileSizeSmallerThan5MB($imageInput['tmp_name'])) return new JSONRenderer(['success' => false, 'message' => '5MBより大きい画像はアップロードできません。']);
 
             $extension = explode('/', $mime)[1];
 
@@ -27,7 +28,7 @@ return [
             // アップロード先のディレクトリがない場合は作成
             if(!is_dir(dirname($imagePath))) mkdir(dirname($imagePath), 0755, true);
             // アップロードにした場合は失敗のメッセージを送る
-            if (!move_uploaded_file($imageInput['tmp_name'], $imagePath)) return new JSONRenderer(['success' => false, 'message' => 'Upload failed.']);
+            if (!move_uploaded_file($imageInput['tmp_name'], $imagePath)) return new JSONRenderer(['success' => false, 'message' => 'アップロードに失敗しました。']);
 
             $hash_for_shared_url = hash('sha256', uniqid(mt_rand(), true));
             $hash_for_delete_url = hash('sha256', uniqid(mt_rand(), true));
@@ -78,15 +79,15 @@ return [
         'POST' => function () : JSONRenderer {
             $json = file_get_contents("php://input");
             $shared_url = json_decode($json, true)['shared_url'];
-            $result = DatabaseHelper::deleteImageData($shared_url);
+            $imagePath = DatabaseHelper::getImageData($shared_url)['path'];
+            $deleteFromDBresult = DatabaseHelper::deleteImageData($shared_url);
 
-            if ($result) {
-                return new JSONRenderer(["success" => true]);
-            } else {
-                return new JSONRenderer(["success" => false, "message" => "Database operation failed"]);
-            }
+            if (!$deleteFromDBresult) return new JSONRenderer(["success" => false, "message" => "データベースの操作に失敗しました"]);
 
-            return new JSONRenderer(["success" => true, "test" => $shared_url]);
+            $deleteFromStorageResult = unlink($imagePath);
+            if (!$deleteFromStorageResult)return new JSONRenderer(["success" => false, "message" => "画像の削除に失敗しました。"]);
+
+            return new JSONRenderer(["success" => true]);
         }
         
     ]
