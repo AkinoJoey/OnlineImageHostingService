@@ -6,7 +6,7 @@
             <p class="mb-0"><?= $viewCount . " Views" ?></p>
         </div>
         <div class="text-align-center">
-            <img src="data:<?= $mime ?>;base64,<?= $image ?>" alt="uploaded image">
+            <img class="dynamic-image" src="data:<?= $mime ?>;base64,<?= $image ?>" alt="uploaded image">
         </div>
     </div>
 </main>
