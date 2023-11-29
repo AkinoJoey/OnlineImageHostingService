@@ -54,14 +54,28 @@ class DatabaseHelper{
         return $rowsAffected > 0;
     }
 
-    public static function updateViewCount(string $shared_url) : bool {
+    public static function updateImageData(string $shared_url) : bool {
         $mysqli = new MySQLWrapper();
-        $stmt = $mysqli->prepare("UPDATE images SET view_count = view_count + 1 WHERE shared_url = ? ");
-        $stmt->bind_param('s', $shared_url);
+        $currentTime = date('Y-m-d H:i:s');
+        $stmt = $mysqli->prepare("UPDATE images SET view_count = view_count + 1, last_accessed_at = ?  WHERE shared_url = ? ");
+        $stmt->bind_param('ss', $currentTime ,$shared_url);
         $stmt->execute();
         $rowsAffected = $stmt->affected_rows;
 
         return $rowsAffected > 0;
+    }
+
+    public static function deleteInactiveImageData30Days() : void{
+        $mysqli = new MySQLWrapper();
+        $deleteThreshold = date('Y-m-d H:i:s', strtotime('-1 days')); 
+        $stmt = $mysqli->prepare("DELETE FROM images WHERE last_accessed_at < ?");
+        $stmt->bind_param('s', $deleteThreshold);
+        $stmt->execute();
+
+        if ($stmt->errno) {
+            $errorMessage = "Error: {$stmt->error}";
+            error_log($errorMessage);
+        }
     }
 
 }
