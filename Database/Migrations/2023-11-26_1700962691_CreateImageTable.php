@@ -15,7 +15,8 @@ class CreateImageTable implements SchemaMigration
                 shared_url VARCHAR(255) NOT NULL UNIQUE,
                 delete_url VARCHAR(255) NOT NULL UNIQUE,
                 mime VARCHAR(20) NOT NULL,
-                view_count INT DEFAULT 0);'
+                view_count INT DEFAULT 0,
+                last_accessed_at DATETIME DEFAULT CURRENT_TIMESTAMP);'
         ];
     }
 
