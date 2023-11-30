@@ -2,4 +2,9 @@
 
 use Helpers\DatabaseHelper;
 
-DatabaseHelper::deleteInactiveImageData30Days();
+$oldData = DatabaseHelper::getInactiveImageData30Days();
+
+if(!empty($oldData)){
+    DatabaseHelper::deleteInactiveImageData30Days();
+    array_map('unlink', $oldData);
+}
