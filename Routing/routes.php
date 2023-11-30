@@ -11,12 +11,17 @@ return [
             return new HTMLRenderer('component/top');
         },
         'POST' => function() : JSONRenderer {
-            $imageInput = $_FILES['imageInput'];
+            $tmpPath = $_FILES['imageInput']['tmp_name'];
             $finfo = new finfo(FILEINFO_MIME_TYPE);
-            $mime = $finfo->file($imageInput['tmp_name']);
+            $mime = $finfo->file($tmpPath);
+            $byteSize = filesize($tmpPath);
 
             if(!ValidationHelper::validateFileType($mime)) return new JSONRenderer(['success' => false, 'message' => 'png,jpg,gif以外の拡張子には対応していません。']);
-            if(!ValidationHelper::isFileSizeSmallerThan5MB($imageInput['tmp_name'])) return new JSONRenderer(['success' => false, 'message' => '5MBより大きい画像はアップロードできません。']);
+            if(!ValidationHelper::isFileSizeSmallerThan5MB($byteSize)) return new JSONRenderer(['success' => false, 'message' => '5MBより大きい画像はアップロードできません。']);
+
+            $ipAddress = $_SERVER['REMOTE_ADDR'];
+            $totalUploadSizeToday = DatabaseHelper::getTotalUploadSizeToday($ipAddress);
+            if (!ValidationHelper::checkUploadSizeLimit($totalUploadSizeToday, $byteSize)) return new JSONRenderer(['success' => false, 'message' => '1日のアップロード合計容量は5MBです。']);
 
             $extension = explode('/', $mime)[1];
 
@@ -28,7 +33,7 @@ return [
             // アップロード先のディレクトリがない場合は作成
             if(!is_dir(dirname($imagePath))) mkdir(dirname($imagePath), 0755, true);
             // アップロードにした場合は失敗のメッセージを送る
-            if (!move_uploaded_file($imageInput['tmp_name'], $imagePath)) return new JSONRenderer(['success' => false, 'message' => 'アップロードに失敗しました。']);
+            if (!move_uploaded_file($tmpPath, $imagePath)) return new JSONRenderer(['success' => false, 'message' => 'アップロードに失敗しました。']);
 
             $hash_for_shared_url = hash('sha256', uniqid(mt_rand(), true));
             $hash_for_delete_url = hash('sha256', uniqid(mt_rand(), true));
