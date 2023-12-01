@@ -39,7 +39,7 @@ return [
             $hash_for_delete_url = hash('sha256', uniqid(mt_rand(), true));
             $shared_url = '/' . $extension . '/' . $hash_for_shared_url;
             $delete_url = '/' .  'delete' . '/' . $hash_for_delete_url;
-            $insertResult = DatabaseHelper::insertImageData($imagePath, $shared_url, $delete_url, $mime);
+            $insertResult = DatabaseHelper::insertImageData($imagePath, $byteSize, $shared_url, $delete_url, $mime, $ipAddress);
 
             if ($insertResult) {
                 return new JSONRenderer(["success" => true, "shared_url" => $shared_url, "delete_url"=> $delete_url]);

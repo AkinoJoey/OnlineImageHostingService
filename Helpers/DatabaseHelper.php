@@ -6,11 +6,11 @@ use Database\MySQLWrapper;
 use Exception;
 
 class DatabaseHelper{
-    public static function insertImageData(string $path, string $shared_url, string $delete_url, string $mime): bool{
+    public static function insertImageData(string $path, int $byteSize, string $shared_url, string $delete_url, string $mime, string $ipAddress): bool{
         $mysqli = new MySQLWrapper();
-        $query = "INSERT INTO images (path, shared_url, delete_url, mime) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO images (path, byte_size ,shared_url, delete_url, mime, uploaded_ip_address) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $mysqli->prepare($query);
-        $stmt->bind_param("ssss",$path, $shared_url, $delete_url, $mime);
+        $stmt->bind_param("sissss",$path, $byteSize, $shared_url, $delete_url, $mime, $ipAddress);
         $result = $stmt->execute();
 
         if (!$result) throw new Exception("Error executing INSERT query: " . $stmt->error);
@@ -102,6 +102,13 @@ class DatabaseHelper{
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
+
+        if($row['total_size'] === null){
+            return 0;
+        }elseif(!$row){
+            throw new Exception("Error executing select query: " . $stmt->error);
+        }
+
         return $row['total_size'];
     }
 
