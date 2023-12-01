@@ -21,7 +21,8 @@ return [
 
             $ipAddress = $_SERVER['REMOTE_ADDR'];
             $totalUploadSizeToday = DatabaseHelper::getTotalUploadSizeToday($ipAddress);
-            if (!ValidationHelper::checkUploadSizeLimit($totalUploadSizeToday, $byteSize)) return new JSONRenderer(['success' => false, 'message' => '1日のアップロード合計容量は5MBです。']);
+            if($totalUploadSizeToday === false) return new JSONRenderer(["success" => false, "message" => "データベースの操作に失敗しました。"]);
+            if (!ValidationHelper::checkUploadSizeLimit($totalUploadSizeToday, $byteSize)) return new JSONRenderer(['success' => false, 'message' => '1日のアップロード合計容量は5MB以内です。']);
 
             $extension = explode('/', $mime)[1];
 
