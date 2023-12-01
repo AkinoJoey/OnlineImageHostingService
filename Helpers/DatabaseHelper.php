@@ -13,9 +13,7 @@ class DatabaseHelper{
         $stmt->bind_param("sissss",$path, $byteSize, $shared_url, $delete_url, $mime, $ipAddress);
         $result = $stmt->execute();
 
-        if (!$result) throw new Exception("Error executing INSERT query: " . $stmt->error);
-
-        return true;
+        return $result;
     }
 
     public static function getImageData(string $shared_url): Array | false{
@@ -25,8 +23,6 @@ class DatabaseHelper{
         $stmt->execute();
         $result = $stmt->get_result();
         $data = $result->fetch_assoc();
-
-        if (!$data) return false;
 
         return $data;
     }
@@ -39,7 +35,7 @@ class DatabaseHelper{
         $result = $stmt->get_result();
         $data = $result->fetch_assoc();
 
-        if (!$data) return false;
+        if(!$data) return false;
 
         return $data['shared_url'];
     }
@@ -84,6 +80,7 @@ class DatabaseHelper{
         $stmt = $mysqli->prepare("SELECT path FROM images WHERE last_accessed_at < ?");
         $stmt->bind_param('s', $deleteThreshold);
         $stmt->execute();
+
         $result = $stmt->get_result();
 
         $data = [];
@@ -94,7 +91,7 @@ class DatabaseHelper{
         return $data;
     }
 
-    public static function getTotalUploadSizeToday(string $ipAddress) : int {
+    public static function getTotalUploadSizeToday(string $ipAddress) : int | false {
         $mysqli = new MySQLWrapper();
         $stmt = $mysqli->prepare("SELECT SUM(byte_size) as total_size FROM images WHERE uploaded_ip_address = ? AND created_at > (NOW() - INTERVAL ? MINUTE)");
         $interval = 5; // テストのため5分に設定。本番では1日に設定予定
@@ -106,7 +103,7 @@ class DatabaseHelper{
         if($row['total_size'] === null){
             return 0;
         }elseif(!$row){
-            throw new Exception("Error executing select query: " . $stmt->error);
+            return false;
         }
 
         return $row['total_size'];
