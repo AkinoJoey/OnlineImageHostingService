@@ -16,7 +16,7 @@ class ValidationHelper
 
     public static function checkUploadSizeLimit(int $totalUploadSizeToday,int $uploadedSize) : bool {
         $limit = (5 * 1024 * 1024);  //5MBが上限
-        return ($uploadedSize + $totalUploadSizeToday) < $limit;
+        return ($uploadedSize + $totalUploadSizeToday) <= $limit;
     }
 
 }
