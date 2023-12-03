@@ -40,7 +40,9 @@ return [
             $hash_for_delete_url = hash('sha256', uniqid(mt_rand(), true));
             $shared_url = '/' . $extension . '/' . $hash_for_shared_url;
             $delete_url = '/' .  'delete' . '/' . $hash_for_delete_url;
-            $insertResult = DatabaseHelper::insertImageData($imagePath, $byteSize, $shared_url, $delete_url, $mime, $ipAddress);
+
+            $imagePathFromUploadDir = $subdirectory . '/' . $filename;
+            $insertResult = DatabaseHelper::insertImageData($imagePathFromUploadDir, $byteSize, $shared_url, $delete_url, $mime, $ipAddress);
 
             if ($insertResult) {
                 return new JSONRenderer(["success" => true, "shared_url" => $shared_url, "delete_url"=> $delete_url]);
@@ -65,7 +67,7 @@ return [
             $viewCount = $data['view_count'];
             $mime = $data['mime'];
 
-            $image = base64_encode(file_get_contents($path));
+            $image =  base64_encode(file_get_contents('../uploads/' . $path));
 
             return new HTMLRenderer('component/sharedImage', ['image'=> $image, 'mime' => $mime ,'viewCount' => $viewCount]);
         }
@@ -90,7 +92,7 @@ return [
 
             if (!$deleteFromDBresult) return new JSONRenderer(["success" => false, "message" => "データベースの操作に失敗しました"]);
 
-            $deleteFromStorageResult = unlink($imagePath);
+            $deleteFromStorageResult = unlink('../uploads/' . $imagePath);
             if (!$deleteFromStorageResult)return new JSONRenderer(["success" => false, "message" => "画像の削除に失敗しました。"]);
 
             return new JSONRenderer(["success" => true]);
