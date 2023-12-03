@@ -63,7 +63,7 @@ class DatabaseHelper{
 
     public static function deleteInactiveImageData30Days() : void{
         $mysqli = new MySQLWrapper();
-        $deleteThreshold = date('Y-m-d H:i:s', strtotime('-10 days')); // テストのため10秒に設定
+        $deleteThreshold = date('Y-m-d H:i:s', strtotime('-10 seconds')); // テストのため10秒に設定
         $stmt = $mysqli->prepare("DELETE FROM images WHERE last_accessed_at < ?");
         $stmt->bind_param('s', $deleteThreshold);
         $stmt->execute();
@@ -85,7 +85,7 @@ class DatabaseHelper{
 
         $data = [];
         while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
+            $data[] = $row['path'];
         }
     
         return $data;
