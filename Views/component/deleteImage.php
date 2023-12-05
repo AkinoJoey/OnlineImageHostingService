@@ -1,5 +1,5 @@
 <main class="container">
-    <h2 class="text-align-center"><a class="text-decoration-none" href="/">Pix Place</a></h2>
+    <h2 class="text-align-center"><a class="text-decoration-none" href="/">Pix Pocket</a></h2>
     <div>
         <p class="text-align-center"><a href="<?= $shared_url ?>"><?= $shared_url ?></a>の削除を希望する場合は下の削除ボタンをクリックしてください。</p>
         <div class="row center-xs">

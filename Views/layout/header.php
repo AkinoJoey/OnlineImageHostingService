@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <title>Pix Place</title>
+    <title>Pix Pocket</title>
 </head>
 
 <body>
