@@ -1,5 +1,5 @@
 <main class="container">
-    <h2 class="text-align-center"><a class="text-decoration-none" href="/">Pix Place</a></h2>
+    <h2 class="text-align-center"><a class="text-decoration-none" href="/">Pix Pocket</a></h2>
 
     <div class="center-xs mt-2">
         <form id="myForm" enctype="multipart/form-data">
@@ -41,7 +41,8 @@
                     container.innerHTML = `
                     <dialog id="modal" class="scale-in-ver-center" open>
                         <article class="modal">
-                            <h3>Confirm</h3>
+                            <img class="puff-in-center" src="/images/checkmark.svg" ></img>
+                            <h3 class="mt-2">Upload Complete!</h3>     
                             <p>共有用URL:<br><a href="${shared_url}" target="_blank" rel="noopener">${shared_url}</a></p>
                             <p>削除用URL:<br><a href="${delete_url}" target="_blank" rel="noopener">${delete_url}</a></p>
                         </article>
