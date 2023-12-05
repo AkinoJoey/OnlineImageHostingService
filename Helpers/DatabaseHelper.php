@@ -24,6 +24,8 @@ class DatabaseHelper{
         $result = $stmt->get_result();
         $data = $result->fetch_assoc();
 
+        if (!$data) return false;
+
         return $data;
     }
 
