@@ -1,8 +1,6 @@
 <?php
 # cronでは作業ディレクトリがホームディレクトリになるから、作業ディレクトリをcronディレクトリに変更
 chdir(__DIR__);
-
-
 require('../autoload.php');
 
 use Helpers\DatabaseHelper;
