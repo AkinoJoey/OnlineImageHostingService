@@ -65,7 +65,7 @@ class DatabaseHelper{
 
     public static function deleteInactiveImageData30Days() : void{
         $mysqli = new MySQLWrapper();
-        $deleteThreshold = date('Y-m-d H:i:s', strtotime('-10 seconds')); // テストのため10秒に設定
+        $deleteThreshold = date('Y-m-d H:i:s', strtotime('-30 day'));
         $stmt = $mysqli->prepare("DELETE FROM images WHERE last_accessed_at < ?");
         $stmt->bind_param('s', $deleteThreshold);
         $stmt->execute();
@@ -78,7 +78,7 @@ class DatabaseHelper{
 
     public static function getInactiveImageData30Days() : array {
         $mysqli = new MySQLWrapper();
-        $deleteThreshold = date('Y-m-d H:i:s', strtotime('-10 seconds')); // テストのため10秒に設定
+        $deleteThreshold = date('Y-m-d H:i:s', strtotime('-30 day')); 
         $stmt = $mysqli->prepare("SELECT path FROM images WHERE last_accessed_at < ?");
         $stmt->bind_param('s', $deleteThreshold);
         $stmt->execute();
@@ -95,8 +95,8 @@ class DatabaseHelper{
 
     public static function getTotalUploadSizeToday(string $ipAddress) : int | false {
         $mysqli = new MySQLWrapper();
-        $stmt = $mysqli->prepare("SELECT SUM(byte_size) as total_size FROM images WHERE uploaded_ip_address = ? AND created_at > (NOW() - INTERVAL ? MINUTE)");
-        $interval = 5; // テストのため5分に設定。本番では1日に設定予定
+        $stmt = $mysqli->prepare("SELECT SUM(byte_size) as total_size FROM images WHERE uploaded_ip_address = ? AND created_at > (NOW() - INTERVAL ? DAY)");
+        $interval = 1;
         $stmt->bind_param('si', $ipAddress, $interval);
         $stmt->execute();
         $result = $stmt->get_result();
