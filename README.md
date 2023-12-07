@@ -38,8 +38,8 @@ Pix Pocketの発想は、[Text Snippetter](https://text-snippetter.yuki-gakiya.c
 2023年の11月20日から10日間かけて開発しました。
 
 ## ER図
-当プロジェクトではマイグレーションを除いた場合、imagesテーブルのみを使用しています。
-以下はimagesテーブルのER図です。
+当プロジェクトではマイグレーションを除いた場合、imagesテーブルのみを使用しています。  
+以下はimagesテーブルのER図です。  
 ![images-table](https://github.com/AkinoJoey/OnlineImageHostingService/assets/124570638/0453b16f-29e7-4c4b-8242-c711a6a36013)
 
 
