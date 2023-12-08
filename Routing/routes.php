@@ -27,7 +27,7 @@ return [
             $extension = explode('/', $mime)[1];
 
             $filename = hash('sha256', uniqid(mt_rand(), true)) . '.' . $extension;
-            $uploadDir =   '../uploads/'; 
+            $uploadDir =   './uploads/'; 
             $subdirectory = substr($filename, 0, 2);
             $imagePath = $uploadDir .  $subdirectory. '/' . $filename;
 
@@ -67,9 +67,7 @@ return [
             $viewCount = $data['view_count'];
             $mime = $data['mime'];
 
-            $image =  base64_encode(file_get_contents('../uploads/' . $path));
-
-            return new HTMLRenderer('component/sharedImage', ['image'=> $image, 'mime' => $mime ,'viewCount' => $viewCount]);
+            return new HTMLRenderer('component/sharedImage', ['path'=> $path, 'mime' => $mime ,'viewCount' => $viewCount]);
         }
     ],
     'delete' => [
@@ -92,7 +90,7 @@ return [
 
             if (!$deleteFromDBresult) return new JSONRenderer(["success" => false, "message" => "データベースの操作に失敗しました"]);
 
-            $deleteFromStorageResult = unlink('../uploads/' . $imagePath);
+            $deleteFromStorageResult = unlink('./uploads/' . $imagePath);
             if (!$deleteFromStorageResult)return new JSONRenderer(["success" => false, "message" => "画像の削除に失敗しました。"]);
 
             return new JSONRenderer(["success" => true]);
