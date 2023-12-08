@@ -1,6 +1,7 @@
 <?php
 require '../autoload.php';
 $DEBUG = true;
+date_default_timezone_set('Asia/Tokyo');
 
 $routes = include('../Routing/routes.php');
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
