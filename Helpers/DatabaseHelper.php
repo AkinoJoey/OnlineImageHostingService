@@ -3,8 +3,6 @@
 namespace Helpers;
 
 use Database\MySQLWrapper;
-use Exception;
-
 class DatabaseHelper{
     public static function insertImageData(string $path, int $byteSize, string $shared_url, string $delete_url, string $mime, string $ipAddress): bool{
         $mysqli = new MySQLWrapper();
