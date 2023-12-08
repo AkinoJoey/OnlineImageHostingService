@@ -7,7 +7,7 @@ use Helpers\DatabaseHelper;
 
 $oldData = DatabaseHelper::getInactiveImageData30Days();
 
-$uploadDir = '../uploads/';
+$uploadDir = '../public/uploads/';
 
 if(!empty($oldData)){
     DatabaseHelper::deleteInactiveImageData30Days();
@@ -16,4 +16,3 @@ if(!empty($oldData)){
         unlink($currentData);
     }
 }
-
