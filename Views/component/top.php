@@ -10,10 +10,18 @@
             <button id="submitter" type="submit" role="button" class="w-50 mt-2">POST</button>
         </form>
     </div>
+    <dialog id="progress-window">
+        <article class="modal">
+            <h4>please wait...</h4>
+            <progress></progress>
+        </article>
+    </dialog>
     <div id="modal-container"></div>
+
 </main>
 <script>
     const modal = document.getElementById('modal');
+    const progressWindow = document.getElementById('progress-window');
 
     document.getElementById('myForm').addEventListener('submit', function(event) {
         event.preventDefault();
@@ -21,6 +29,7 @@
         let fileInput = document.querySelector('#imageInput');
         const formData = new FormData();
         formData.append('imageInput', fileInput.files[0]);
+        progressWindow.open = true;
 
         fetch('/', {
                 method: 'POST',
@@ -34,6 +43,8 @@
             })
             .then(data => {
                 if (data.success) {
+                    progressWindow.open = false;
+
                     const shared_url = data.shared_url;
                     const delete_url = data.delete_url;
 
@@ -49,10 +60,12 @@
                     </dialog>
                     `;
                 } else {
+                    progressWindow.open = false;
                     alert(data.message);
                 }
             })
             .catch(error => {
+                progressWindow.open = false;
                 console.error('Error:', error);
             });
     });
