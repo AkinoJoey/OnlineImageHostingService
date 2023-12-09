@@ -2,8 +2,10 @@
 ユーザーアカウント不要で手軽に画像をアップロード、共有、表示できるオンライン画像ホスティングサービスです。
 
 ## URL
+https://pix-pocket.yuki-gakiya.com
 
 ## Demo
+![uses](https://github.com/AkinoJoey/OnlineImageHostingService/assets/124570638/aea9942d-5f21-40f6-9aed-1fae71f2b03a)
 
 ## 概要
 Pix Pocketは、ユーザーアカウント不要の画像共有サービスです。  
@@ -78,6 +80,18 @@ uploads/
 
 このプロジェクトでは、まず対応している画像形式を「png, jpeg, gif」に制限し、一度のアップロード容量を5MB、1日のアップロード総容量も5MBに設定しました。
 ユーザーがこれらの条件を満たさない画像をアップロードした場合、適切なアラートが表示されます。
+#### サポートされていない画像をアップロードした場合
+![not-support](https://github.com/AkinoJoey/OnlineImageHostingService/assets/124570638/c7ab1b25-fe62-4184-9228-683902d3d65b)
+
+
+#### 1日のアップロード総容量が5MBを越した場合
+![one_day_limit](https://github.com/AkinoJoey/OnlineImageHostingService/assets/124570638/47157c7e-4dc9-4bc8-bfbe-251b2d97bbc1)
+
+
+#### 1度のアップロード容量が5MBより大きい場合
+![larger](https://github.com/AkinoJoey/OnlineImageHostingService/assets/124570638/be9d51b8-e152-42ff-b3b7-77cf053c2c5f)
+
+
 
 「1日にアップロードできる総容量」についてはIPアドレスごとに制限をかけ、悪意ある利用を防ぐための対策を実施しました。  
 また、エラーメッセージの表示はユーザーが画像をアップロードした場合だけでなく、データベースに画像を保存する際やデータの取得に失敗した場合にも行うようにし、ユーザーが発生したエラーに対処しやすいようにしました。
