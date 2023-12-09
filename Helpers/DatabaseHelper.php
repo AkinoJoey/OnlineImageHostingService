@@ -93,9 +93,8 @@ class DatabaseHelper{
 
     public static function getTotalUploadSizeToday(string $ipAddress) : int | false {
         $mysqli = new MySQLWrapper();
-        $stmt = $mysqli->prepare("SELECT SUM(byte_size) as total_size FROM images WHERE uploaded_ip_address = ? AND created_at > (NOW() - INTERVAL ? DAY)");
-        $interval = 1;
-        $stmt->bind_param('si', $ipAddress, $interval);
+        $stmt = $mysqli->prepare("SELECT SUM(byte_size) as total_size FROM images WHERE uploaded_ip_address = ? AND DATE(created_at) = CURDATE()");
+        $stmt->bind_param('s', $ipAddress);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
