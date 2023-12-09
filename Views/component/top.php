@@ -66,7 +66,7 @@
             })
             .catch(error => {
                 progressWindow.open = false;
-                console.error('Error:', error);
+                alert(error);
             });
     });
 </script>
