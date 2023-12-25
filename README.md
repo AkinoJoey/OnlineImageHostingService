@@ -56,7 +56,8 @@ Pix Pocketの発想は、[Text Snippetter](https://text-snippetter.yuki-gakiya.c
 ## ER図
 当プロジェクトではマイグレーションを除いた場合、imagesテーブルのみを使用しています。  
 以下はimagesテーブルのER図です。  
-![images-table](https://github.com/AkinoJoey/OnlineImageHostingService/assets/124570638/0453b16f-29e7-4c4b-8242-c711a6a36013)
+![plantUML (2)](https://github.com/AkinoJoey/OnlineImageHostingService/assets/124570638/b6dfb2fd-530f-43b2-9360-f8c32c228f45)
+
 
 
 ## こだわった点
