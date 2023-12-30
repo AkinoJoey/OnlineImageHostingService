@@ -1,18 +1,9 @@
 <?php
 # cronでは作業ディレクトリがホームディレクトリになるから、作業ディレクトリをcronディレクトリに変更
-chdir(__DIR__);
-require('../autoload.php');
+chdir( __DIR__  . "/..");
 
-use Helpers\DatabaseHelper;
+// DailyAccessCheckコマンドを実行する
+$output = [];
+exec("php console dac", $output);
 
-$oldData = DatabaseHelper::getInactiveImageData30Days();
-
-$uploadDir = '../public/uploads/';
-
-if(!empty($oldData)){
-    DatabaseHelper::deleteInactiveImageData30Days();
-    for($i = 0; $i < count($oldData); $i++){
-        $currentData = $uploadDir . $oldData[$i];
-        unlink($currentData);
-    }
-}
+print_r($output);
