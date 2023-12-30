@@ -1,9 +1,11 @@
 <?php
 # cronでは作業ディレクトリがホームディレクトリになるから、作業ディレクトリをcronディレクトリに変更
 chdir( __DIR__  . "/..");
+date_default_timezone_set('Asia/Tokyo');
+echo date("Y-m-d H:i:s" . "\n");
 
-// DailyAccessCheckコマンドを実行する
 $output = [];
-exec("php console dac", $output);
+// DailyAccessCheckコマンドを実行する
+$result = exec("php console dac", $output);
 
-print_r($output);
+if($result) print_r($output);
