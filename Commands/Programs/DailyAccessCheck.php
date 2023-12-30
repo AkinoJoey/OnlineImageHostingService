@@ -37,6 +37,7 @@ class DailyAccessCheck extends AbstractCommand
             foreach ($oldData as $file) {
                 $currentData = $uploadDir . $file;
                 unlink($currentData);
+                $this->log("Delete "  . $currentData);
             }
 
             $this->log("Access check complete.");
