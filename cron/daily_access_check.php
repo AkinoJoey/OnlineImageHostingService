@@ -8,4 +8,6 @@ $output = [];
 // DailyAccessCheckコマンドを実行する
 $result = exec("php console dac", $output);
 
+// 不要な1行目を削除
+array_shift($output);
 if($result) print_r($output);
