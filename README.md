@@ -84,21 +84,22 @@ uploads/
 
 ### cronを活用した自動的なストレージ最適化
 システムのストレージを効果的に管理するために、cronを活用して30日間アクセスのない画像を自動的に削除する機能を導入しました。  
-最初に、dac(DailyAccessCheck)という独自コマンドを作成しました。  
-このコマンドを使用すると、ターミナルに```php console dac```と入力することで、30日間アクセスのないデータと画像ファイルが削除されます。  
+最初に、[dac(DailyAccessCheck)](https://github.com/AkinoJoey/OnlineImageHostingService/blob/main/Commands/Programs/DailyAccessCheck.php)という独自コマンドを作成しました。  
+このコマンドの作成により、ターミナルに```php console dac```と入力することで、30日間アクセスのないデータと画像ファイルが削除されるようになりました。  
 
-また、データが削除された場合は```Delete {filename}```がログとして標準出力され、30日間アクセスのないデータが1つもない場合は、```No data exceeds 30 days.```としてログが標準出力されるようにしました。  
-さらに、このコマンドをcronで実行するために、cron/daily_access_check.phpを作成しました。  
-cronには以下のように登録しました。
+削除されたデータに関する情報は```Delete {filename}```がログとして標準出力され、30日間アクセスのないデータが1つもない場合は、```No data exceeds 30 days.```という形でログとして標準出力されます。  これにより、実行の結果を簡潔かつ明瞭に確認できるようにしました。 
+
+cronで定期実行するために、[cron/daily_access_check.php](https://github.com/AkinoJoey/OnlineImageHostingService/blob/main/cron/daily_access_check.php)を作成し、以下のようにcronに登録しました。
 ```
 0 0 * * * /path/to/php /path/to/cron/daily_access_check.php >> /path/to/cron/log.txt 2>&1
 ```
-これにより、1日1回、30日間アクセスのないデータが削除されるようにし、同時にログが確認できるようにしました。
-cron/log.txtはgitignoreに登録しているのでGitHub上では閲覧できませんが、以下のようなテキストが表示されます。
+これにより、毎日定時に30日間アクセスのないデータが削除され、同時に詳細なログがcron/log.txtに出力されます。  
+なお、cron/log.txtは.gitignoreに登録しており、GitHub上では閲覧できません。
 
-** log.txtの出力例 **
+**log.txtの出力例**  
+log.txtの出力例は以下の通りです。
 ```
-<!-- データを削除した場合 -->
+<!-- 30日間アクセスがなかったデータが存在した場合 -->
 2023-12-29 00:00:00
 Array
 (
@@ -117,27 +118,25 @@ Array
 
 <!-- エラーが発生した場合 -->
 2023-12-31 00:00:00
-<!-- ここに以下のようなエラー内容が表示される -->
-PHP Parse error:  syntax error,  ...
+PHP Warning:    ...
 ```
 
-さらに、cronを導入するにあたって、以下のようにテストを行いました。
+cronを導入するにあたって、以下のようにテストを行いました。
 
-** ローカル環境での手動テスト **  
-ローカル環境で以下のようなコマンドを実行して、コマンドのロジックに間違いないがないか確認しました。
+**ローカル環境での手動テスト**  
+ローカル環境で以下のようなコマンドを実行して、コマンドのロジックに誤りがないか確認しました。
 ```
-php  /path/to/cron/daily_access_check.php >> /path/to/cron/log.txt 2>&1
+php /path/to/cron/daily_access_check.php >> /path/to/cron/log.txt 2>&1
 ```
 
-エラーがないことを確認後、以下をcronに登録しました。
+エラーがないことを確認した後、以下をcronに登録しました。
 そして、テストデータを用意して、データが1分後に削除されることを確認しました。
 ```
 * * * * * /path/to/php /path/to/cron/daily_access_check.php >> /path/to/cron/log.txt 2>&1
 ```
 
-** 本番環境にデプロイ後ログの確認 **  
-本番環境にデプロイして、cronを登録した後はcron/log.txtでログを確認して、正常に動作をしていることを確認しました。
-
+**本番環境にデプロイ後ログの確認**  
+プロジェクトを本番環境にデプロイした後、cronを登録しました。その後、cron/log.txtを確認して、システムが正常に動作していることを確認しました。
 
 ### 厳密なPOSTデータ検証
 ユーザーがアップロードした画像の検証を行い、条件に合わない場合には適切なエラーメッセージを表示するようにしました。
