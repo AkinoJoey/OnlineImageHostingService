@@ -32,7 +32,7 @@ return [
             $imagePath = $uploadDir .  $subdirectory. '/' . $filename;
 
             // アップロード先のディレクトリがない場合は作成
-            if(!is_dir(dirname($imagePath))) mkdir(dirname($imagePath), 0755, true);
+            if(!is_dir(dirname($imagePath))) mkdir(dirname($imagePath), 0775, true);
             // アップロードにした場合は失敗のメッセージを送る
             if (!move_uploaded_file($tmpPath, $imagePath)) return new JSONRenderer(['success' => false, 'message' => 'アップロードに失敗しました。']);
 
